@@ -12,7 +12,8 @@ import (
 	"time"
 )
 
-const DEFAULT_INTERVAL = 2
+const DEFAULT_INTERVAL = 1 * time.Second
+const DEFAULT_DURATION = 0
 
 type filetest interface {
 	satisfied() (bool, error)
@@ -24,7 +25,7 @@ type filefreshness struct {
 }
 
 func newFileFreshness(path string, age time.Duration) filefreshness {
-	return filefreshness { path: path, age: age }
+	return filefreshness{path: path, age: age}
 }
 
 func (f filefreshness) satisfied() (bool, error) {
@@ -42,7 +43,7 @@ type fileexists struct {
 }
 
 func newFileExists(path string) fileexists {
-	return fileexists { path: path }
+	return fileexists{path: path}
 }
 
 func (f fileexists) satisfied() (bool, error) {
@@ -60,7 +61,7 @@ type filenotexists struct {
 }
 
 func newFileNotExists(path string) filenotexists {
-	return filenotexists { path: path }
+	return filenotexists{path: path}
 }
 
 func (f filenotexists) satisfied() (bool, error) {
@@ -75,12 +76,19 @@ func (f filenotexists) satisfied() (bool, error) {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] [PID]\n\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Repeatedly try to stop a process with SIGTERM and eventually SIGKILL\n\n")
+		fmt.Fprintf(os.Stderr, "Usage: %s [options] [PATH]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Check if a file exists (or meets other criteria) in a "+
+			"loop, blocking until it does\n\n")
 		flag.PrintDefaults()
 	}
 
-	interval := flag.Duration("interval", DEFAULT_INTERVAL, "How long between checks, in seconds")
+	interval := flag.Duration("interval", DEFAULT_INTERVAL,
+		"How long between file checks, as a duration (example '1s', '30s', '1m', etc.)")
+	notexists := flag.Bool("notexists", false, "Check if the file does *not* exist")
+	exists := flag.Bool("exists", true, "Check if the file exists. This is the default behavior")
+	fresh := flag.Duration("fresh", DEFAULT_DURATION, "Check if the file has *not* been modified "+
+		"within the specified amount of time, as a duration (example '1s', '30s', '1m', etc.)")
+
 	flag.Parse()
 
 	if flag.NArg() < 1 {
@@ -88,7 +96,17 @@ func main() {
 	}
 
 	path := flag.Arg(0)
-	check := newFileFreshness(path, 120 * time.Second)
+
+	var check filetest = nil
+	if *fresh != DEFAULT_DURATION {
+		check = newFileFreshness(path, *fresh)
+	} else if *notexists {
+		check = newFileNotExists(path)
+	} else if *exists {
+		check = newFileExists(path)
+	} else {
+		log.Fatal("No file check specified")
+	}
 
 	for {
 		if done, err := check.satisfied(); done {
@@ -97,6 +115,6 @@ func main() {
 			log.Fatalf("Problem checking file: %s", err)
 		}
 
-		time.Sleep(*interval * time.Second)
+		time.Sleep(*interval)
 	}
 }
