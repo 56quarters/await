@@ -9,7 +9,7 @@ await [--exists] [--notexists] [--fresh t] [--interval t] [PATH]
 ```
 
 The `await` command will repeatedly check if a path exists (by default), does not exist,
-or has been modified in the last N amount of time. The intended use case is to call `await`
+or has been modified in the last `t` amount of time. The intended use case is to call `await`
 as part of a shell script. For example, perhaps you're using a shell script to start a server:
 you could invoke `await` to wait until the server created a particular file.
 
@@ -34,7 +34,7 @@ wait_for_server_start() {
 wait_for_server_start
 ```
 
-Options:
+### Options
 
 * `--exists` Check that the provided `PATH` exists and exit as soon as it does
 * `--notexists` Check that the provided `PATH` does not exist and exit as soon as it does not
