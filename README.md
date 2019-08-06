@@ -13,7 +13,9 @@ or has been modified in the last `t` amount of time. The intended use case is to
 as part of a shell script. For example, perhaps you're using a shell script to start a server:
 you could invoke `await` to wait until the server created a particular file.
 
-Example shell script:
+### Examples
+
+Wait for a file to exist, as part of a shell script.
 
 ```bash
 #!/bin/sh
@@ -32,6 +34,18 @@ wait_for_server_start() {
 }
 
 wait_for_server_start
+```
+
+Wait for a file to be removed.
+
+```bash
+await --notexists /tmp/import-job-running.lock
+```
+Wait for a file to no longer be "fresh" (i.e. updated in the last 5 minutes)
+
+```bash
+await --fresh 5m /var/log/my-server.log
+echo "Server isn't writing to its log!!!"
 ```
 
 ### Options
