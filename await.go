@@ -90,18 +90,15 @@ func (f filenotexists) satisfied() (bool, error) {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] [PATH]\n\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Check if a file exists (or meets other criteria) in a "+
-			"loop, blocking until it does\n\n")
+		fmt.Fprintf(os.Stderr, "Usage: %s [options] [FILE]\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Wait for a file to be created/deleted/modified while blocking.\n\n")
 		flag.PrintDefaults()
 	}
 
-	interval := flag.Duration("interval", DEFAULT_INTERVAL,
-		"How long between file checks, as a duration (example '1s', '30s', '1m', etc.)")
-	notexists := flag.Bool("notexists", false, "Check if the file does *not* exist")
-	exists := flag.Bool("exists", true, "Check if the file exists. This is the default behavior")
-	fresh := flag.Duration("fresh", DEFAULT_DURATION, "Check if the file has *not* been modified "+
-		"within the specified amount of time, as a duration (example '1s', '30s', '1m', etc.)")
+	interval := flag.Duration("interval", DEFAULT_INTERVAL, "How long to wait between checking that a file has been created/deleted/modified. T is a \"duration\" argument and so accepts values like '1s', '5m', '1h', etc. The default is one second ('1s').")
+	notexists := flag.Bool("notexists", false, "Check that the provided FILE does not exist and exit as soon as it does not")
+	exists := flag.Bool("exists", true, "Check that the provided FILE exists and exit as soon as it does")
+	fresh := flag.Duration("fresh", DEFAULT_DURATION, "Check if that the provided FILE has been modified in the last T duration and exit as soon as it has not. T is a \"duration\" argument and so accepts values like '1s', '5m', '1h', etc.")
 
 	flag.Parse()
 

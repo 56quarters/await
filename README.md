@@ -5,7 +5,7 @@ Wait for a file to be created/deleted/modified while blocking.
 ## Usage
 
 ```
-await [--exists] [--notexists] [--fresh t] [--interval t] [PATH]
+await [--exists] [--notexists] [--fresh t] [--interval t] [FILE]
 ```
 
 The `await` command will repeatedly check if a path exists (by default), does not exist,
@@ -50,15 +50,15 @@ echo "Server isn't writing to its log!!!"
 
 ### Options
 
-* `--exists` Check that the provided `PATH` exists and exit as soon as it does
-* `--notexists` Check that the provided `PATH` does not exist and exit as soon as it does not
-* `--fresh t` Check if that the provided `PATH` has been modified in the last `t` duration and
+* `--exists` Check that the provided `FILE` exists and exit as soon as it does
+* `--notexists` Check that the provided `FILE` does not exist and exit as soon as it does not
+* `--fresh t` Check if that the provided `FILE` has been modified in the last `t` duration and
   exit as soon as it has not. `t` is a "duration" argument and so accepts values like `1s`, `5m`,
   `1h`, etc.
 * `--interval t` How long to wait between checking that a file has been created/deleted/modified.
   `t` is a "duration" argument and so accepts values like `1s`, `5m`, `1h`, etc. The default is
   one second (`1s`).
-* `PATH` File path to check for existing/not existing/freshness.
+* `FILE` File path to check for existing/not existing/freshness.
 
 ### Exit Codes
 
