@@ -1,6 +1,6 @@
 // Await - Wait for a file to be created/deleted/modified while blocking
 //
-// Copyright 2019 TSH Labs
+// Copyright 2019 Nick Pillitteri
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
