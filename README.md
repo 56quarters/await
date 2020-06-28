@@ -72,7 +72,7 @@ Await is a basic Go project and doesn't require anything special to build, just 
 standard library.
 
 ```
-git clone git@github.com:tshlabs/await.git && cd await
+git clone git@github.com:56quarters/await.git && cd await
 go build
 ./await --exists /tmp/foo
 ```
